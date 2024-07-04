@@ -16,6 +16,7 @@ export default function AppNavigator() {
       <Botton.Navigator
         initialRouteName="Main"
         screenOptions={() => ({
+          tabBarHideOnKeyboard: true,
           tabBarShowLabel: false,
           tabBarStyle: {
             borderRadius: 20,
@@ -33,19 +34,11 @@ export default function AppNavigator() {
           component={HomeScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View
-                style={{
-                  backgroundColor: focused ? colors.lightBlue : "",
-                  padding: 10,
-                  borderRadius: 50,
-                }}
-              >
-                <Feather
-                  name="calendar"
-                  size={30}
-                  style={{ color: focused ? colors.blue : colors.black }}
-                />
-              </View>
+              <Feather
+                name="calendar"
+                size={30}
+                style={{ color: focused ? colors.blue : colors.black }}
+              />
             ),
             headerShown: false,
           }}
@@ -55,19 +48,11 @@ export default function AppNavigator() {
           component={GenresScreen}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View
-                style={{
-                  backgroundColor: focused ? colors.lightBlue : "",
-                  padding: 10,
-                  borderRadius: 50,
-                }}
-              >
-                <Feather
-                  name="tag"
-                  size={30}
-                  style={{ color: focused ? colors.blue : colors.black }}
-                />
-              </View>
+              <Feather
+                name="tag"
+                size={30}
+                style={{ color: focused ? colors.blue : colors.black }}
+              />
             ),
             headerShown: false,
           }}
