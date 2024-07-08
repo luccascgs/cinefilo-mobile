@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   AppRegistry,
   Button,
@@ -8,18 +8,18 @@ import {
   Text,
   View,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { X } from "react-native-feather";
 import GameInput from "../components/GameInput";
 import { api } from "../config/api";
 import { checkMovie } from "../helpers/movieHelper";
 import { loadAllEmojis } from "../helpers/emojiHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../config/variables";
+import { Feather } from "@expo/vector-icons";
+import { X } from "react-native-feather";
 
 AppRegistry.registerComponent("main", () => HomeScreen);
 
-export default function HomeScreen() {
+export default function GeneralScreen() {
   const [currentMovie, setCurrentMovie] = useState({
     id: "69b88f4a-72b0-457f-9997-2d1efe1abae3",
     genre: 6,
@@ -27,7 +27,7 @@ export default function HomeScreen() {
     acceptableNames: ["titanic", "thetitanic", "otitanic"],
     name: "Titanic",
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentGuess, setCurrentGuess] = useState(0);
   const [currentEmoji, setCurrentEmoji] = useState(0);
   const [guessType, setGuessType] = useState(Array(5).fill(2));
@@ -75,20 +75,16 @@ export default function HomeScreen() {
         flex: 1,
       }}
     >
-      {modalVisible && (
-        <View className="flex-1 z-20 absolute w-full h-full bg-black/75" />
-      )}
       <ImageBackground
         source={require("../../assets/background-image.png")}
         resizeMode="repeat"
-        className="flex-1 px-8 items-center justify-center"
+        className="flex-1 p-8 items-center justify-center"
       >
         <Text className="text-2xl text-slate-50 font-black absolute top-12">
           CINÉFILO
         </Text>
-
         <Modal
-          animationType="slide"
+          animationType="fade"
           visible={modalVisible}
           transparent={true}
           onRequestClose={() => {
@@ -96,7 +92,7 @@ export default function HomeScreen() {
           }}
         >
           <Pressable
-            className="flex-1 justify-center items-center p-8"
+            className="flex-1 z-20 justify-center items-center bg-black/75 p-8"
             onPress={() => setModalVisible(!modalVisible)}
           >
             <View className="w-full relative py-6 items-center bg-slate-50 rounded-xl border-2 boreder-slate-600">
@@ -137,10 +133,10 @@ export default function HomeScreen() {
         </Modal>
 
         {isLoading ? (
-          <Text>AAA</Text>
+          <Text>Carregando...</Text>
         ) : (
           <>
-            {over && !modalVisible && (
+            {over && (
               <Pressable
                 className="flex-1 z-10 absolute w-full h-full"
                 onPress={() => setModalVisible(!modalVisible)}

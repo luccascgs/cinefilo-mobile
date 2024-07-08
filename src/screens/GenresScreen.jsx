@@ -80,7 +80,7 @@ export default function GenresScreen({ navigation }) {
         </Text>
         <PagerView initialPage={0}>
           {cards.map((card, index) => (
-            <TouchableOpacity onPress={()=>navigation.navigate("daily")} className="mt-20 h-4/6 mx-12 rounded-3xl" key={index}>
+            <TouchableOpacity onPress={()=>navigation.navigate("general")} className="mt-20 h-4/6 mx-12 rounded-3xl" key={index}>
               <LinearGradient
                 className="h-full rounded-3xl items-center justify-end"
                 colors={[card.color2, card.color1]}

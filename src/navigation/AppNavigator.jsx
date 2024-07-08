@@ -1,12 +1,13 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Calendar } from "react-native-feather";
 import { Feather } from "@expo/vector-icons";
+import { Calendar } from "react-native-feather";
+import { View } from "react-native";
 import { colors } from "../config/variables";
 import HomeScreen from "../screens/HomeScreen";
 import GenresScreen from "../screens/GenresScreen";
-import { View } from "react-native";
+import GeneralScreen from "../screens/GeneralScreen";
 
 const Botton = createBottomTabNavigator();
 
@@ -57,7 +58,16 @@ export default function AppNavigator() {
             headerShown: false,
           }}
         />
+        <Botton.Screen
+          name="general"
+          component={GeneralScreen}
+          tab
+          options={{
+            headerShown: false,
+          }}
+        />
       </Botton.Navigator>
+        
     </NavigationContainer>
   );
 }
