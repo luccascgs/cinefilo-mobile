@@ -8,6 +8,8 @@ import { colors } from "../config/variables";
 import HomeScreen from "../screens/HomeScreen";
 import GenresScreen from "../screens/GenresScreen";
 import GeneralScreen from "../screens/GeneralScreen";
+import GenresNavigator from "./GenresNavigator";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Botton = createBottomTabNavigator();
 
@@ -45,8 +47,8 @@ export default function AppNavigator() {
           }}
         />
         <Botton.Screen
-          name="genres"
-          component={GenresScreen}
+          name="genresStack"
+          component={GenresNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <Feather
@@ -59,15 +61,20 @@ export default function AppNavigator() {
           }}
         />
         <Botton.Screen
-          name="general"
-          component={GeneralScreen}
-          tab
+          name="profile"
+          component={ProfileScreen}
           options={{
+            tabBarIcon: ({ focused }) => (
+              <Feather
+                name="user"
+                size={30}
+                style={{ color: focused ? colors.blue : colors.black }}
+              />
+            ),
             headerShown: false,
           }}
         />
       </Botton.Navigator>
-        
     </NavigationContainer>
   );
 }

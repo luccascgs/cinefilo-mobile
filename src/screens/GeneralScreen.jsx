@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   AppRegistry,
-  Button,
   ImageBackground,
-  Modal,
   Pressable,
   Text,
   View,
@@ -14,37 +12,30 @@ import { checkMovie } from "../helpers/movieHelper";
 import { loadAllEmojis } from "../helpers/emojiHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../config/variables";
-import { Feather } from "@expo/vector-icons";
-import { X } from "react-native-feather";
+import GameSkeleton from "../components/GameSkeleton";
+import ProgressModal from "../components/ProgressModal";
 
 AppRegistry.registerComponent("main", () => HomeScreen);
 
-export default function GeneralScreen() {
-  const [currentMovie, setCurrentMovie] = useState({
-    id: "69b88f4a-72b0-457f-9997-2d1efe1abae3",
-    genre: 6,
-    emojis: ["🚢", "🌊", "🚪", "💔", "🎻"],
-    acceptableNames: ["titanic", "thetitanic", "otitanic"],
-    name: "Titanic",
-  });
-  const [isLoading, setIsLoading] = useState(false);
+export default function HomeScreen() {
+  const [currentMovie, setCurrentMovie] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [currentGuess, setCurrentGuess] = useState(0);
   const [currentEmoji, setCurrentEmoji] = useState(0);
   const [guessType, setGuessType] = useState(Array(5).fill(2));
   const [modalVisible, setModalVisible] = useState(false);
   const [over, setOver] = useState(false);
 
-  // const loadCurrentMovie = useCallback(async () => {
-  //   setIsLoading(true);
-  //   const response = await api.get("/movies/daily");
-  //   console.log(response.data);
-  //   setCurrentMovie(response.data);
-  //   setIsLoading(false);
-  // }, []);
+  const loadCurrentMovie = useCallback(async () => {
+    setIsLoading(true);
+    const response = await api.get("/movies/genres");
+    setCurrentMovie(response.data);
+    setIsLoading(false);
+  }, []);
 
-  // useEffect(() => {
-  //   loadCurrentMovie();
-  // }, [loadCurrentMovie]);
+  useEffect(() => {
+    loadCurrentMovie();
+  }, [loadCurrentMovie]);
 
   const handleSubmit = (value, index) => {
     if (value) {
@@ -75,76 +66,37 @@ export default function GeneralScreen() {
         flex: 1,
       }}
     >
+      {modalVisible && (
+        <View className="flex-1 z-20 absolute w-full h-full bg-black/75" />
+      )}
       <ImageBackground
         source={require("../../assets/background-image.png")}
         resizeMode="repeat"
-        className="flex-1 p-8 items-center justify-center"
+        className="flex-1 px-8 items-center justify-center"
       >
-        <Text className="text-2xl text-slate-50 font-black absolute top-12">
+        <Text className="text-2xl text-slate-50 font-black absolute top-16">
           CINÉFILO
         </Text>
-        <Modal
-          animationType="fade"
-          visible={modalVisible}
-          transparent={true}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <Pressable
-            className="flex-1 z-20 justify-center items-center bg-black/75 p-8"
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <View className="w-full relative py-6 items-center bg-slate-50 rounded-xl border-2 boreder-slate-600">
-              <Text className="text-2xl font-bold text-slate-600">
-                Progresso
-              </Text>
-              <X
-                color={colors.black}
-                className="absolute top-2 right-2"
-                onPress={() => setModalVisible(!modalVisible)}
-              />
-              <Text className="text-lg font-bold text-slate-600 mb-4">
-                Resposta: {currentMovie.name}
-              </Text>
-              <Text className="text-2xl font-bold text-slate-600">
-                Você conseguiu
-              </Text>
-              <Text className="text-2xl font-bold text-slate-600">10</Text>
-              <Text className="text-2xl font-bold text-slate-600">
-                Seguidas
-              </Text>
-              <View className="flex-row w-full justify-around mt-5">
-                <Pressable className="flex-row items-center p-1 bg-emerald-50 border-2 border-emerald-600 rounded-xl">
-                  <Text className="text-emerald-600 pr-2 text-lg">
-                    Reiniciar
-                  </Text>
-                  <Feather color={colors.green} size={18} name="rotate-ccw" />
-                </Pressable>
-                <Pressable className="flex-row items-center p-1 bg-sky-50 border-2 border-sky-600 rounded-xl">
-                  <Text className="text-sky-600 pr-2 text-lg">
-                    Compartilhar
-                  </Text>
-                  <Feather color={colors.blue} size={18} name="share-2" />
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-        </Modal>
-
+        <ProgressModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          currentMovie={currentMovie}
+          mode="geral"
+        />
+        <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
+          GERAL
+        </Text>
         {isLoading ? (
-          <Text>Carregando...</Text>
+          <GameSkeleton />
         ) : (
           <>
-            {over && (
+            {over && !modalVisible && (
               <Pressable
                 className="flex-1 z-10 absolute w-full h-full"
                 onPress={() => setModalVisible(!modalVisible)}
               />
             )}
-            <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
-              DIÁRIO
-            </Text>
+
             <View className="w-full h-20 flex-row justify-evenly items-center rounded-xl bg-slate-50 border-2 border-slate-600 overflow-hidden">
               {currentMovie.emojis.map((emoji, index) => (
                 <Text

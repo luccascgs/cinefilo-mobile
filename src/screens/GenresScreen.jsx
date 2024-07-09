@@ -75,7 +75,7 @@ export default function GenresScreen({ navigation }) {
         resizeMode="repeat"
         className="flex-1 justify-center"
       >
-        <Text className="text-2xl text-slate-50 font-black absolute top-12 self-center">
+        <Text className="text-2xl text-slate-50 font-black absolute top-16 self-center">
           CINÉFILO
         </Text>
         <PagerView initialPage={0}>
