@@ -10,6 +10,9 @@ import GenresScreen from "../screens/GenresScreen";
 import GeneralScreen from "../screens/GeneralScreen";
 import GenresNavigator from "./GenresNavigator";
 import ProfileScreen from "../screens/ProfileScreen";
+import LoginScreen from "../screens/LoginScreen";
+import AdminNavigator from "./AdminNavigator";
+import ProfileNavigator from "./ProfileStack";
 
 const Botton = createBottomTabNavigator();
 
@@ -61,12 +64,40 @@ export default function AppNavigator() {
           }}
         />
         <Botton.Screen
-          name="profile"
-          component={ProfileScreen}
+          name="profileStack"
+          component={ProfileNavigator}
           options={{
             tabBarIcon: ({ focused }) => (
               <Feather
                 name="user"
+                size={30}
+                style={{ color: focused ? colors.blue : colors.black }}
+              />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Botton.Screen
+          name="adminStack"
+          component={AdminNavigator}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Feather
+                name="database"
+                size={30}
+                style={{ color: focused ? colors.blue : colors.black }}
+              />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Botton.Screen
+          name="login"
+          component={LoginScreen}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Feather
+                name="log-in"
                 size={30}
                 style={{ color: focused ? colors.blue : colors.black }}
               />

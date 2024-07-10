@@ -15,7 +15,7 @@ export default function ProfileScreen() {
       <ImageBackground
         source={require("../../assets/background-image.png")}
         resizeMode="repeat"
-        className="flex-1 justify-center"
+        className="flex-1 px-8 justify-center items-center"
       >
         <Text className="text-2xl text-slate-50 font-black absolute top-16 self-center">
           CINÉFILO

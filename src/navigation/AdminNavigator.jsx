@@ -1,20 +1,18 @@
 import GeneralScreen from "../screens/GeneralScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import GenresScreen from "../screens/GenresScreen";
 import { colors } from "../config/variables";
+import AdminScreen from "../screens/AdminScreen";
 
 const Stack = createStackNavigator();
 
-export default function GenresNavigator() {
+export default function AdminNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="genres"
-        component={GenresScreen}
+        name="admin"
+        component={AdminScreen}
         tab
-        options={{
-          headerShown: false,
-        }}
+        options={{title: false, headerTransparent: true, headerTintColor: colors.white }}
       />
       <Stack.Screen
         name="general"
