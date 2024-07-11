@@ -44,7 +44,7 @@ export default function AdminScreen({ navigation }) {
   }, [search]);
 
   useEffect(() => {
-    handleSearch();;
+    handleSearch();
   }, [handleSearch]);
   useEffect(() => {
     loadMovies();
@@ -67,7 +67,7 @@ export default function AdminScreen({ navigation }) {
         <Text className="text-2xl text-slate-50 font-black absolute top-16 self-center">
           CINÉFILO
         </Text>
-        <View className="pl-4 pr-8 w-full h-10 mb-4 flex-row items-center justify-between border-2 border-slate-600 bg-slate-50 rounded-xl">
+        <View className="pl-4 pr-8 w-full h-12 mb-4 flex-row items-center justify-between border-2 border-slate-600 bg-slate-50 rounded-xl">
           <TextInput
             className="w-full"
             value={filter}
@@ -95,7 +95,12 @@ export default function AdminScreen({ navigation }) {
                     {movie.name}
                   </Text>
                   <View className="flex-row">
-                    <Pressable className="mr-4">
+                    <Pressable
+                      onPress={() =>
+                        navigation.navigate("form", { id: movie.id })
+                      }
+                      className="mr-4"
+                    >
                       <Feather color={colors.green} name="edit" size={28} />
                     </Pressable>
                     <Pressable>
@@ -107,7 +112,10 @@ export default function AdminScreen({ navigation }) {
             </ScrollView>
           </View>
         )}
-        <Pressable className="w-full justify-center bg-emerald-50 mt-4 border-2 border-emerald-600 rounded-xl h-10">
+        <Pressable
+          onPress={() => navigation.navigate("form")}
+          className="w-full justify-center bg-emerald-50 mt-4 border-2 border-emerald-600 rounded-xl h-12"
+        >
           <Text className="self-center text-emerald-600">Criar Filme</Text>
         </Pressable>
         <Image
