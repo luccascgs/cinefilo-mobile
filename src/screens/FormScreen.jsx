@@ -178,9 +178,6 @@ export default function FormScreen({ route, navigation }) {
         >
           <Text className="self-center text-emerald-600">Enviar</Text>
         </Pressable>
-        <Image
-          source={{ uri: "https://pbs.twimg.com/media/F1w71cMXsAEV6iy.jpg" }}
-        />
       </ImageBackground>
     </LinearGradient>
   );

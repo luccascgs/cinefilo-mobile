@@ -1,6 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
 import {
-  Image,
   ImageBackground,
   Pressable,
   Text,
@@ -51,9 +50,6 @@ export default function LoginScreen({ navigation }) {
             </Pressable>
           </View>
         </View>
-        <Image
-          source={{ uri: "https://pbs.twimg.com/media/F1w71cMXsAEV6iy.jpg" }}
-        />
       </ImageBackground>
     </LinearGradient>
   );

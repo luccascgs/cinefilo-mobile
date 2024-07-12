@@ -118,9 +118,6 @@ export default function AdminScreen({ navigation }) {
         >
           <Text className="self-center text-emerald-600">Criar Filme</Text>
         </Pressable>
-        <Image
-          source={{ uri: "https://pbs.twimg.com/media/F1w71cMXsAEV6iy.jpg" }}
-        />
       </ImageBackground>
     </LinearGradient>
   );
