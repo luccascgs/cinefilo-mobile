@@ -17,6 +17,7 @@ export default function ProfileNavigator() {
         options={{
           headerShown: false,
         }}
+        initialParams={{ id: "vHQqfGHYFIUhzwdtpJKWoxqxGQs1" }}
       />
       <Stack.Screen
         name="changePassword"

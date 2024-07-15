@@ -30,6 +30,7 @@ export default function UsernameModal({
         setModalVisible(!modalVisible);
       }}
     >
+      <Text>{username}  {usernameProp}</Text>
       <Pressable
         className="flex-1 justify-center items-center p-8"
         onPress={() => setModalVisible(!modalVisible)}

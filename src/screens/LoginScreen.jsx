@@ -7,8 +7,19 @@ import {
   View,
 } from "react-native";
 import { colors } from "../config/variables";
+import { useState } from "react";
 
 export default function LoginScreen({ navigation }) {
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = () => {
+    if (!name || password) {
+      return setError("Preencha todos os campos");
+    }
+  };
+
   return (
     <LinearGradient
       colors={[colors.blueBg, colors.darkBlueBg]}
@@ -33,19 +44,30 @@ export default function LoginScreen({ navigation }) {
               Usuário ou Email
             </Text>
             <TextInput
+              value={name}
+              onChangeText={setName}
               className="w-full bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl pl-4 py-1"
               placeholder="Digite seu usuário ou email"
             />
             <Text className="text-xs mb-1 text-slate-600">Senha</Text>
             <TextInput
-              className="w-full bg-slate-50 mb-4 border-2 border-slate-600 rounded-xl pl-4 py-1"
+              value={password}
+              onChangeText={setPassword}
+              className="w-full bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl pl-4 py-1"
               placeholder="Digite sua senha"
               secureTextEntry
             />
-            <Pressable onPress={()=>navigation.navigate("adminStack")} className="w-full justify-center bg-sky-50 mb-4 border-2 border-sky-600 rounded-xl h-10">
+            {error && <Text className="text-red-600">{error}</Text>}
+            <Pressable
+              onPress={handleSubmit}
+              className="w-full justify-center mt-2 bg-sky-50 mb-4 border-2 border-sky-600 rounded-xl h-10"
+            >
               <Text className="self-center text-sky-600">Fazer Login</Text>
             </Pressable>
-            <Pressable className="w-full justify-center bg-sky-600 mb-2 border-sky-50 rounded-xl h-10">
+            <Pressable
+              onPress={() => navigation.navigate("adminStack")}
+              className="w-full justify-center bg-sky-600 mb-2 border-sky-50 rounded-xl h-10"
+            >
               <Text className="self-center text-sky-50">Fazer Registro</Text>
             </Pressable>
           </View>
