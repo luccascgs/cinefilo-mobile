@@ -1,22 +1,25 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, ImageBackground, Text, TextInput, View } from "react-native";
+import { Image, ImageBackground, Text, ScrollView, View } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
+import dayjs from "dayjs";
 
 import { colors } from "../config/variables";
 import { Pressable } from "react-native";
 import UsernameModal from "../components/UsernameModal";
 import { api } from "../config/api";
+import { cards } from "../config/genres";
 
 export default function ProfileScreen({ route, navigation }) {
+  const { id_user } = route.params ?? {};
   const [user, setUser] = useState([]);
   const [stats, setStats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
   const loadProfile = useCallback(async () => {
-    const userResponse = await api.get(`/users/aSIFn2mAcHgbBNCsz6IVcmfF6Xz1`);
-    const statsResponse = await api.get(`/stats/aSIFn2mAcHgbBNCsz6IVcmfF6Xz1`);
+    const userResponse = await api.get(`/users/${id_user}`);
+    const statsResponse = await api.get(`/stats/${id_user}`);
     setUser(userResponse.data);
     setStats(statsResponse.data);
     setIsLoading(false);
@@ -49,7 +52,7 @@ export default function ProfileScreen({ route, navigation }) {
         <UsernameModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          usernameProp={user.username}
+          id={id_user}
         />
         {isLoading ? (
           <Text>Carregando</Text>
@@ -80,19 +83,52 @@ export default function ProfileScreen({ route, navigation }) {
                 />
               </View>
               <Text className="mt-2 text-slate-400">
-                Conta criada em {user.date}
+                Conta criada em {dayjs(user.date).format("DD/MM/YYYY")}
               </Text>
-              <View className="mt-4 w-full">
-                <Text className="text-lg justify-self-start">Estatísticas</Text>
-                <Text>Diário: {stats.daily} pontos</Text>
-                <Text>Geral: {stats.genreal} pontos</Text>
-                <Text>Terror: {stats.horror} pontos</Text>
-                <Text>Comédia: {stats.comedy} pontos</Text>
-                <Text>Ficção: {stats.scifi} pontos</Text>
-                <Text>Animação: {stats.cartoon} pontos</Text>
-                <Text>Séries: {stats.series} pontos</Text>
-                <Text>Drama: {stats.drama} pontos</Text>
-                <Text>Adam: {stats.adam} pontos</Text>
+              <Text className="mt-2 text-slate-600 font-medium text-lg self-start">
+                Estatísticas semanais
+              </Text>
+              <View className="w-full mt-1">
+                <ScrollView
+                  horizontal={true}
+                  contentContainerStyle={{
+                    flexDirection: "row",
+                    gap: 10,
+                    height: 120,
+                  }}
+                >
+                  <View
+                    style={{ backgroundColor: colors.blueBg }}
+                    className="px-4 items-center justify-center rounded-xl"
+                  >
+                    <Text className="text-slate-50 text-xl font-bold">
+                      Diário
+                    </Text>
+                    <Text className="text-slate-50 text-2xl font-bold">
+                      {stats.daily}
+                    </Text>
+                    <Text className="text-slate-50 text-xl font-bold">
+                      pontos
+                    </Text>
+                  </View>
+                  {cards.map((card, index) => (
+                    <View
+                      key={index}
+                      style={{ backgroundColor: card.color1 }}
+                      className="px-4 items-center justify-center rounded-xl"
+                    >
+                      <Text className="text-center leading-none text-slate-50 text-xl font-bold">
+                        {card.title}
+                      </Text>
+                      <Text className="text-slate-50 text-2xl font-bold">
+                        {stats[card.img]}
+                      </Text>
+                      <Text className="text-slate-50 text-xl font-bold">
+                        seguidos
+                      </Text>
+                    </View>
+                  ))}
+                </ScrollView>
               </View>
             </View>
             <Pressable
@@ -103,14 +139,14 @@ export default function ProfileScreen({ route, navigation }) {
               <Text className="self-center text-sky-600 pl-2">Mudar Senha</Text>
             </Pressable>
             <Pressable
-              onPress={() => console.log("Saiu")}
+              onPress={() => navigation.navigate("login")}
               className="w-full flex-row items-center justify-center bg-red-50 mt-2 border-2 border-red-600 rounded-xl h-10"
             >
               <Feather name="log-out" color={colors.red} />
               <Text className="self-center text-red-600 pl-2">Sair</Text>
             </Pressable>
             <Pressable
-              onPress={() => navigation.navigate("admin")}
+              onPress={() => navigation.navigate("adminStack")}
               className="w-full flex-row items-center justify-center bg-emerald-50 mt-2 border-2 border-emerald-600 rounded-xl h-10"
             >
               <Feather name="database" color={colors.green} />

@@ -12,9 +12,11 @@ import { useCallback, useState } from "react";
 import { colors } from "../config/variables";
 import { api } from "../config/api";
 
-export default function LoginScreen({ navigation }) {
+export default function RegisterScreen({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
 
@@ -27,32 +29,19 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleSubmit = useCallback(async () => {
-    if (validateEmail(name)) {
-      try {
-        const loginCredencials = { email: name, password: password };
-        const response = await api.post("/sign-in", loginCredencials);
-        setError(null);
-        const user = JSON.parse(response.request._response);
-        const uid = user.response.user.uid;
-        navigation.navigate("homeStack", {
-          screen: "profileStack",
-          params: { id_user: uid },
-        });
-      } catch (err) {
-        setError(err.response.data.message);
-      }
-    } else {
-      try {
-        const loginCredencials = { username: name, password: password };
-        const response = await api.post("/sign-in", loginCredencials);
-        const user = JSON.parse(response.request._response);
-        const uid = user.response.user.uid;
-        navigation.navigate("homeStack", { id_user: uid });
-      } catch (err) {
-        setError(err.response.data.message);
-      }
+    if (password.trim() !== repeatPassword.trim()) {
+      return setError("Senhas diferentes, verifique ortografia");
     }
-  }, [name, password, error, setError]);
+    if (!validateEmail(email)) return setError("Digite um email válido");
+    try {
+      const registerCredentials = { email, username, password };
+      const response = await api.post("/users", registerCredentials);
+      const uid = response.data.id;
+      navigation.navigate("homeStack", { id_user: uid });
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+  }, [username, password, error, setError]);
 
   return (
     <LinearGradient
@@ -72,16 +61,23 @@ export default function LoginScreen({ navigation }) {
           CINÉFILO
         </Text>
         <View className="w-full items-center bg-slate-50 py-4 rounded-xl">
-          <Text className="text-2xl mb-1 font-bold text-slate-600">Login</Text>
+          <Text className="text-2xl mb-1 font-bold text-slate-600">
+            Registro
+          </Text>
           <View className="w-5/6">
-            <Text className="text-xs mb-1 text-slate-600">
-              Usuário ou Email
-            </Text>
+            <Text className="text-xs mb-1 text-slate-600">Nome de usuário</Text>
             <TextInput
-              value={name}
-              onChangeText={setName}
+              value={username}
+              onChangeText={setUsername}
               className="w-full bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl pl-4 py-1"
-              placeholder="Digite seu usuário ou email"
+              placeholder="Digite seu nome de usuário"
+            />
+            <Text className="text-xs mb-1 text-slate-600">Email</Text>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              className="w-full bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl pl-4 py-1"
+              placeholder="Digite seu email"
             />
             <Text className="text-xs mb-1 text-slate-600">Senha</Text>
             <View className="flex-row items-center w-full justify-between bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl px-4 py-1">
@@ -99,25 +95,35 @@ export default function LoginScreen({ navigation }) {
                 name={visible ? "eye" : "eye-off"}
               />
             </View>
+            <Text className="text-xs mb-1 text-slate-600">Repetir senha</Text>
+            <View className="flex-row items-center w-full justify-between bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl px-4 py-1">
+              <TextInput
+                className="w-11/12"
+                value={repeatPassword}
+                onChangeText={setRepeatPassword}
+                placeholder="Repita sua senha"
+                secureTextEntry={!visible}
+              />
+              <Feather
+                color={colors.black}
+                size={24}
+                onPress={() => setVisible(!visible)}
+                name={visible ? "eye" : "eye-off"}
+              />
+            </View>
             {error && <Text className="text-red-600">{error}</Text>}
             <TouchableOpacity
               onPress={handleSubmit}
-              className="w-full justify-center mt-2 bg-sky-50 mb-4 border-2 border-sky-600 rounded-xl h-10"
-            >
-              <Text className="self-center text-sky-600">Fazer Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("register")}
-              className="w-full justify-center bg-sky-600 mb-2 border-sky-50 rounded-xl h-10"
+              className="w-full justify-center bg-sky-600 mb-2 mt-2 border-sky-50 rounded-xl h-10"
             >
               <Text className="self-center text-sky-50">Fazer Registro</Text>
             </TouchableOpacity>
-            <Pressable
-              onPress={() => navigation.navigate("email")}
-              className="self-center"
+            <TouchableOpacity
+              onPress={() => navigation.navigate("login")}
+              className="w-full justify-center mt-2 bg-sky-50 border-2 border-sky-600 rounded-xl h-10"
             >
-              <Text>Esqueci minha senha</Text>
-            </Pressable>
+              <Text className="self-center text-sky-600">Fazer Login</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>

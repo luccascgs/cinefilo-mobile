@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",
+    "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.6.0",
     "@react-navigation/material-bottom-tabs": "^6.2.28",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@react-navigation/stack": "^6.3.29",
     "axios": "^1.7.2",
+    "dayjs": "^1.11.11",
     "expo": "~51.0.14",
     "expo-image": "~1.12.12",
     "expo-linear-gradient": "~13.0.2",
@@ -48,8 +50,7 @@
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.10",
     "twrnc": "^4.3.0",
-    "webpack.config.js": "^0.0.0",
-    "@react-native-picker/picker": "2.7.5"
+    "webpack.config.js": "^0.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",

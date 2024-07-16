@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   ActivityIndicator,
-  Image,
   ImageBackground,
   Pressable,
   ScrollView,

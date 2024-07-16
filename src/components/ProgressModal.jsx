@@ -2,14 +2,24 @@ import { Modal, Pressable, Share, Text, View } from "react-native";
 import { X } from "react-native-feather";
 import { Feather } from "@expo/vector-icons";
 import { colors } from "../config/variables";
+import { useCallback, useEffect } from "react";
 
 export default function ProgressModal({
   modalVisible,
   setModalVisible,
   currentMovie,
-  mode,
+  genre,
   streak,
 }) {
+  const [isLoading, setIsloading] = useState(true);
+  const [players, setPlayers] = useState([]);
+
+  const loadScoreboard = useCallback(async () => {
+    const response = await api.get(`/stats/scoreboard/${genre}`);
+    setPlayers(response.data);
+    setIsloading(false);
+  }, []);
+
   const onShare = async () => {
     try {
       await Share.share({
@@ -17,6 +27,10 @@ export default function ProgressModal({
       });
     } catch (error) {}
   };
+
+  useEffect(() => {
+    loadScoreboard();
+  }, [loadScoreboard]);
 
   return (
     <Modal
@@ -41,15 +55,21 @@ export default function ProgressModal({
           <Text className="text-lg font-bold text-slate-600 mb-4">
             Resposta: {currentMovie.name}
           </Text>
-          <Text className="text-2xl font-bold text-slate-600">
-            Você conseguiu
-          </Text>
-          <Text className="text-2xl font-bold text-slate-600">10</Text>
-          <Text className="text-2xl font-bold text-slate-600">Seguidas</Text>
+          {isLoading ? (
+            <View>
+              <ActivityIndicator size={"large"} color={colors.black} />
+            </View>
+          ) : (
+            <View className="">
+              <ScrollView>
+                {players?.map((players, index) => (
+                  <View key={index}></View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
           <View className="flex-row w-full justify-around mt-5">
-            <Pressable
-              className="flex-row items-center p-1 bg-emerald-50 border-2 border-emerald-600 rounded-xl"
-            >
+            <Pressable className="flex-row items-center p-1 bg-emerald-50 border-2 border-emerald-600 rounded-xl">
               <Text className="text-emerald-600 pr-2 text-lg">Reiniciar</Text>
               <Feather color={colors.green} size={18} name="rotate-ccw" />
             </Pressable>

@@ -3,11 +3,11 @@ import { colors } from "../config/variables";
 import AdminNavigator from "./AdminNavigator";
 import ProfileScreen from "../screens/ProfileScreen";
 import PasswordScreen from "../screens/PasswordScreen";
-import EmaillScreen from "../screens/EmailScreen";
 
 const Stack = createStackNavigator();
 
-export default function ProfileNavigator() {
+export default function ProfileNavigator({ route }) {
+  const { id_user } = route.params;
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -17,22 +17,25 @@ export default function ProfileNavigator() {
         options={{
           headerShown: false,
         }}
-        initialParams={{ id: "vHQqfGHYFIUhzwdtpJKWoxqxGQs1" }}
+        initialParams={{ id_user: id_user }}
       />
       <Stack.Screen
         name="changePassword"
         component={PasswordScreen}
-        options={{title: false, headerTransparent: true, headerTintColor: colors.white }}
-      />
-      <Stack.Screen
-        name="changeEmail"
-        component={EmaillScreen}
-        options={{title: false, headerTransparent: true, headerTintColor: colors.white }}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
       />
       <Stack.Screen
         name="adminStack"
         component={AdminNavigator}
-        options={{title: false, headerTransparent: true, headerTintColor: colors.white }}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
       />
     </Stack.Navigator>
   );

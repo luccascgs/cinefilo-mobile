@@ -75,7 +75,6 @@ export default function GameInput({
         ref={inputRef}
         value={type === 4 ? movieName : value}
         onChangeText={setValue}
-        mode="outlined"
         placeholder={type !== 1 ? `${index + 1}º Palpite` : "Digite um título"}
         editable={type === 1}
         blurOnSubmit={true}
