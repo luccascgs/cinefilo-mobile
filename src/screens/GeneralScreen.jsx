@@ -82,6 +82,7 @@ export default function HomeScreen() {
           setModalVisible={setModalVisible}
           currentMovie={currentMovie}
           mode="geral"
+          genre="general"
         />
         <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
           GERAL
