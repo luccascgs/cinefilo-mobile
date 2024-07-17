@@ -19,7 +19,11 @@ export default function GenresNavigator() {
       <Stack.Screen
         name="general"
         component={GeneralScreen}
-        options={{title: false, headerTransparent: true, headerTintColor: colors.white }}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
       />
     </Stack.Navigator>
   );

@@ -15,8 +15,6 @@ import { colors } from "../config/variables";
 import GameSkeleton from "../components/GameSkeleton";
 import ProgressModal from "../components/ProgressModal";
 
-AppRegistry.registerComponent("main", () => HomeScreen);
-
 export default function HomeScreen() {
   const [currentMovie, setCurrentMovie] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -47,10 +45,8 @@ export default function HomeScreen() {
           setModalVisible(true);
           setOver(true);
         }, 1500);
-        console.log("Acertou: " + currentMovie.name);
       } else {
         guessType[index] = 3;
-        console.log("Errou");
         setCurrentGuess(currentGuess + 1);
         setCurrentEmoji(currentEmoji + 1);
       }
@@ -83,6 +79,7 @@ export default function HomeScreen() {
           currentMovie={currentMovie}
           mode="diário"
           genre="daily"
+          streak={1}
         />
         <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
           DIÁRIO

@@ -18,6 +18,7 @@ import { api } from "../config/api";
 export default function ProgressModal({
   modalVisible,
   setModalVisible,
+  resetGame,
   currentMovie,
   mode,
   genre,
@@ -87,7 +88,15 @@ export default function ProgressModal({
             className="absolute top-2 right-2"
             onPress={() => setModalVisible(!modalVisible)}
           />
-          <Text className="text-2xl font-bold text-slate-600 mb-1">
+          <Text className="text-lg font-bold text-slate-600 mt-1">
+            Você conseguiu
+            {` ${streak} ${genre === "daily" ? "ponto" : "seguida"}`}
+            {`${streak === 1 ? "" : "s"}`}
+          </Text>
+          <Text className="text-lg font-medium text-slate-600 mb-2">
+            Resposta: {currentMovie.name}
+          </Text>
+          <Text className="text-xl font-bold text-slate-600 mb-1">
             Tabela semanal: {mode}
           </Text>
           {isLoading ? (
@@ -95,7 +104,7 @@ export default function ProgressModal({
               <ActivityIndicator size={"large"} color={colors.black} />
             </View>
           ) : (
-            <View className="w-full h-80 items-center">
+            <View className="w-full h-64 items-center">
               <ScrollView>
                 {playersStats?.map((player, index) => (
                   <View
@@ -118,13 +127,13 @@ export default function ProgressModal({
                       </View>
                       <Text
                         style={styles[`border${handleLeaderColor(index)}`]}
-                        className="mx-2 text-xl font-black text-slate-600"
+                        className="mx-1 text-xl font-black text-slate-600"
                       >
                         #{index + 1}
                       </Text>
                       <Text
                         style={styles[`border${handleLeaderColor(index)}`]}
-                        className="text-lg font-bold text-slate-600"
+                        className="text-lg font-medium text-slate-600"
                       >
                         {player.username}
                       </Text>
@@ -133,27 +142,33 @@ export default function ProgressModal({
                       style={styles[`border${handleLeaderColor(index)}`]}
                       className="text-lg text-slate-600"
                     >
-                      {player.score} pontos
+                      {`${player.score} ${
+                        genre === "daily" ? "pontos" : "seguidas"
+                      }`}
                     </Text>
                   </View>
                 ))}
               </ScrollView>
             </View>
           )}
-          <Text className="text-lg font-bold text-slate-600 mt-2">
-            Resposta: {currentMovie.name}
-          </Text>
           <View className="flex-row w-full justify-between mt-5">
-            <Pressable className="flex-row items-center p-1 bg-emerald-50 border-2 border-emerald-600 rounded-xl">
-              <Text className="text-emerald-600 pr-2 text-lg">Reiniciar</Text>
-              <Feather color={colors.green} size={18} name="rotate-ccw" />
-            </Pressable>
+            {genre !== "daily" && (
+              <Pressable
+                onPress={resetGame}
+                style={{ width: "49%" }}
+                className="h-12 flex-row justify-center items-center bg-emerald-50 border-2 border-emerald-600 rounded-xl"
+              >
+                <Feather color={colors.green} size={18} name="rotate-ccw" />
+                <Text className="text-emerald-600 pl-2 text-lg">Reiniciar</Text>
+              </Pressable>
+            )}
             <Pressable
               onPress={onShare}
-              className="flex-row items-center p-1 bg-sky-50 border-2 border-sky-600 rounded-xl"
+              style={{ width: genre === "daily" ? "100%" : "49%" }}
+              className="h-12 flex-row justify-center items-center bg-sky-50 border-2 border-sky-600 rounded-xl"
             >
-              <Text className="text-sky-600 pr-2 text-lg">Compartilhar</Text>
               <Feather color={colors.blue} size={18} name="share-2" />
+              <Text className="text-sky-600 pl-2 text-lg">Compartilhar</Text>
             </Pressable>
           </View>
         </View>

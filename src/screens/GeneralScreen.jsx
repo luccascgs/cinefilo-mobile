@@ -15,9 +15,7 @@ import { colors } from "../config/variables";
 import GameSkeleton from "../components/GameSkeleton";
 import ProgressModal from "../components/ProgressModal";
 
-AppRegistry.registerComponent("main", () => HomeScreen);
-
-export default function HomeScreen() {
+export default function GeneralScreen({ navigation }) {
   const [currentMovie, setCurrentMovie] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [currentGuess, setCurrentGuess] = useState(0);
@@ -26,16 +24,17 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [over, setOver] = useState(false);
 
+  const resetGame = () => {
+    navigation.goBack();
+    navigation.navigate("general");
+  };
+
   const loadCurrentMovie = useCallback(async () => {
     setIsLoading(true);
     const response = await api.get("/movies/genres");
     setCurrentMovie(response.data);
     setIsLoading(false);
   }, []);
-
-  useEffect(() => {
-    loadCurrentMovie();
-  }, [loadCurrentMovie]);
 
   const handleSubmit = (value, index) => {
     if (value) {
@@ -44,18 +43,25 @@ export default function HomeScreen() {
         setCurrentGuess(5);
         loadAllEmojis(currentEmoji, setCurrentEmoji, setModalVisible);
         setTimeout(() => {
-          setModalVisible(true);
-          setOver(true);
-        }, 1500);
-        console.log("Acertou: " + currentMovie.name);
+          resetGame();
+        }, 3000);
       } else {
         guessType[index] = 3;
-        console.log("Errou");
         setCurrentGuess(currentGuess + 1);
         setCurrentEmoji(currentEmoji + 1);
+        if (currentGuess === 4) {
+          setTimeout(() => {
+            setModalVisible(true);
+            setOver(true);
+          }, 500);
+        }
       }
     }
   };
+
+  useEffect(() => {
+    loadCurrentMovie();
+  }, [loadCurrentMovie]);
 
   return (
     <LinearGradient
@@ -80,9 +86,11 @@ export default function HomeScreen() {
         <ProgressModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          resetGame={resetGame}
           currentMovie={currentMovie}
           mode="geral"
           genre="general"
+          streak={1}
         />
         <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
           GERAL

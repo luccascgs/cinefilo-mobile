@@ -12,7 +12,6 @@ export default function HomeNavigator({ route }) {
   const { id_user } = route.params;
   return (
     <Botton.Navigator
-      initialRouteName="Main"
       screenOptions={() => ({
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
