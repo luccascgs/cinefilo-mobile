@@ -5,7 +5,8 @@ import { colors } from "../config/variables";
 
 const Stack = createStackNavigator();
 
-export default function GenresNavigator() {
+export default function GenresNavigator({ route }) {
+  const { id_user, generalStreak } = route.params;
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -24,6 +25,7 @@ export default function GenresNavigator() {
           headerTransparent: true,
           headerTintColor: colors.white,
         }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
       />
     </Stack.Navigator>
   );

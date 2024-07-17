@@ -9,6 +9,7 @@ import { Pressable } from "react-native";
 import UsernameModal from "../components/UsernameModal";
 import { api } from "../config/api";
 import { cards } from "../config/genres";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ProfileScreen({ route, navigation }) {
   const { id_user } = route.params ?? {};
@@ -25,10 +26,12 @@ export default function ProfileScreen({ route, navigation }) {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    loadProfile();
-  }, [loadProfile]);
-
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      loadProfile();
+    }, [])
+  );
   return (
     <LinearGradient
       colors={[colors.blueBg, colors.darkBlueBg]}
@@ -59,10 +62,18 @@ export default function ProfileScreen({ route, navigation }) {
         ) : (
           <>
             <View className="items-end">
-              <Image
-                className="w-48 h-48 border-2 rounded-full translate-y-12"
-                source={require("../../assets/gilgoiaba.jpg")}
-              />
+              <View className="w-48 h-48 translate-y-12">
+                <Image
+                  className="w-full h-full absolute border-2 rounded-full"
+                  source={require("../../assets/base.png")}
+                />
+                <Image
+                  className="w-full h-full border-2 rounded-full"
+                  source={{
+                    uri: "https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/head%2Fbatman.png?alt=media&token=97fdf637-1f7e-4c86-89f1-d87d02e222e9",
+                  }}
+                />
+              </View>
               <Pressable
                 style={{ borderColor: colors.blueBg }}
                 className="p-2 border-4 rounded-full bg-slate-50"
@@ -98,32 +109,68 @@ export default function ProfileScreen({ route, navigation }) {
                   }}
                 >
                   <View
-                    style={{ backgroundColor: colors.blueBg }}
-                    className="px-4 items-center justify-center rounded-xl"
+                    style={{
+                      borderColor: colors.blueBg,
+                      backgroundColor: "#e6f3fe",
+                    }}
+                    className="px-4 border-2 items-center w-32 justify-center rounded-xl"
                   >
-                    <Text className="text-slate-50 text-xl font-bold">
+                    <Text
+                      style={{
+                        color: colors.blueBg,
+                      }}
+                      className="text-xl font-bold"
+                    >
                       Diário
                     </Text>
-                    <Text className="text-slate-50 text-2xl font-bold">
+                    <Text
+                      style={{
+                        color: colors.blueBg,
+                      }}
+                      className="text-2xl font-bold"
+                    >
                       {stats.daily}
                     </Text>
-                    <Text className="text-slate-50 text-xl font-bold">
+                    <Text
+                      style={{
+                        color: colors.blueBg,
+                      }}
+                      className="text-xl font-bold"
+                    >
                       pontos
                     </Text>
                   </View>
                   {cards.map((card, index) => (
                     <View
                       key={index}
-                      style={{ backgroundColor: card.color1 }}
-                      className="px-4 items-center justify-center rounded-xl"
+                      style={{
+                        borderColor: card.color1,
+                        backgroundColor: card.color3,
+                      }}
+                      className="px-4 border-2 items-center w-32 justify-center rounded-xl"
                     >
-                      <Text className="text-center leading-none text-slate-50 text-xl font-bold">
+                      <Text
+                        style={{
+                          color: card.color1,
+                        }}
+                        className="text-center leading-none text-xl font-bold"
+                      >
                         {card.title}
                       </Text>
-                      <Text className="text-slate-50 text-2xl font-bold">
+                      <Text
+                        style={{
+                          color: card.color1,
+                        }}
+                        className="text-2xl font-bold"
+                      >
                         {stats[card.img]}
                       </Text>
-                      <Text className="text-slate-50 text-xl font-bold">
+                      <Text
+                        style={{
+                          color: card.color1,
+                        }}
+                        className="text-xl font-bold"
+                      >
                         seguidos
                       </Text>
                     </View>
@@ -131,13 +178,13 @@ export default function ProfileScreen({ route, navigation }) {
                 </ScrollView>
               </View>
             </View>
-            <Pressable
+            {/* <Pressable
               onPress={() => navigation.navigate("changePassword")}
               className="w-full flex-row items-center justify-center bg-sky-50 mt-2 border-2 border-sky-600 rounded-xl h-10"
             >
               <Feather name="lock" color={colors.blue} />
               <Text className="self-center text-sky-600 pl-2">Mudar Senha</Text>
-            </Pressable>
+            </Pressable> */}
             <Pressable
               onPress={() => navigation.navigate("login")}
               className="w-full flex-row items-center justify-center bg-red-50 mt-2 border-2 border-red-600 rounded-xl h-10"
@@ -145,13 +192,15 @@ export default function ProfileScreen({ route, navigation }) {
               <Feather name="log-out" color={colors.red} />
               <Text className="self-center text-red-600 pl-2">Sair</Text>
             </Pressable>
-            <Pressable
-              onPress={() => navigation.navigate("adminStack")}
-              className="w-full flex-row items-center justify-center bg-emerald-50 mt-2 border-2 border-emerald-600 rounded-xl h-10"
-            >
-              <Feather name="database" color={colors.green} />
-              <Text className="self-center text-emerald-600 pl-2">Admin</Text>
-            </Pressable>
+            {id_user === "vHQqfGHYFIUhzwdtpJKWoxqxGQs1" && (
+              <Pressable
+                onPress={() => navigation.navigate("adminStack")}
+                className="w-full flex-row items-center justify-center bg-emerald-50 mt-2 border-2 border-emerald-600 rounded-xl h-10"
+              >
+                <Feather name="database" color={colors.green} />
+                <Text className="self-center text-emerald-600 pl-2">Admin</Text>
+              </Pressable>
+            )}
           </>
         )}
       </ImageBackground>

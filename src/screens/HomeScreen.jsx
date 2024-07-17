@@ -15,17 +15,30 @@ import { colors } from "../config/variables";
 import GameSkeleton from "../components/GameSkeleton";
 import ProgressModal from "../components/ProgressModal";
 
-export default function HomeScreen() {
+export default function HomeScreen({ route }) {
+  const { id_user } = route.params;
+
   const [currentMovie, setCurrentMovie] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
   const [currentGuess, setCurrentGuess] = useState(0);
   const [currentEmoji, setCurrentEmoji] = useState(0);
   const [guessType, setGuessType] = useState(Array(5).fill(2));
+  const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [over, setOver] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const setPlayerStats = useCallback(async (score) => {
+    try {
+      const response = await api.get(`/stats/${id_user}`);
+      const points = response.data.daily;
+      const payload = { genre: "daily", value: points + score };
+      await api.put(`/stats/${id_user}`, payload);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   const loadCurrentMovie = useCallback(async () => {
-    setIsLoading(true);
     const response = await api.get("/movies/daily");
     setCurrentMovie(response.data);
     setIsLoading(false);
@@ -39,6 +52,8 @@ export default function HomeScreen() {
     if (value) {
       if (checkMovie(value, currentMovie)) {
         guessType[index] = 4;
+        setScore(5 - currentGuess);
+        setPlayerStats(5 - currentGuess);
         setCurrentGuess(5);
         loadAllEmojis(currentEmoji, setCurrentEmoji, setModalVisible);
         setTimeout(() => {
@@ -49,6 +64,12 @@ export default function HomeScreen() {
         guessType[index] = 3;
         setCurrentGuess(currentGuess + 1);
         setCurrentEmoji(currentEmoji + 1);
+        if (currentGuess === 4) {
+          setTimeout(() => {
+            setModalVisible(true);
+            setOver(true);
+          }, 500);
+        }
       }
     }
   };
@@ -79,7 +100,7 @@ export default function HomeScreen() {
           currentMovie={currentMovie}
           mode="diário"
           genre="daily"
-          streak={1}
+          streak={score}
         />
         <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
           DIÁRIO

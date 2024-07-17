@@ -9,14 +9,17 @@ import {
 import GameInput from "../components/GameInput";
 import { api } from "../config/api";
 import { checkMovie } from "../helpers/movieHelper";
-import { loadAllEmojis } from "../helpers/emojiHelper";
+import { loadAllEmojis, randomizeEmojis } from "../helpers/emojiHelper";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../config/variables";
 import GameSkeleton from "../components/GameSkeleton";
 import ProgressModal from "../components/ProgressModal";
 
-export default function GeneralScreen({ navigation }) {
+export default function GeneralScreen({ route, navigation }) {
+  const { id_user, generalStreak } = route.params;
+
   const [currentMovie, setCurrentMovie] = useState({});
+  const [emojiOrder, setEmojiOrder] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGuess, setCurrentGuess] = useState(0);
   const [currentEmoji, setCurrentEmoji] = useState(0);
@@ -24,10 +27,28 @@ export default function GeneralScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [over, setOver] = useState(false);
 
-  const resetGame = () => {
+  const resetGame = (hasWon) => {
+    const streak = generalStreak + 1;
     navigation.goBack();
-    navigation.navigate("general");
+    if (hasWon) {
+      navigation.navigate("general", { generalStreak: streak });
+    } else {
+      navigation.navigate("general");
+    }
   };
+
+  const setPlayerStats = useCallback(async () => {
+    try {
+      const response = await api.get(`/stats/${id_user}`);
+      const points = response.data.general;
+      if (points < generalStreak) {
+        const payload = { genre: "general", value: generalStreak };
+        await api.put(`/stats/${id_user}`, payload);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   const loadCurrentMovie = useCallback(async () => {
     setIsLoading(true);
@@ -43,9 +64,10 @@ export default function GeneralScreen({ navigation }) {
         setCurrentGuess(5);
         loadAllEmojis(currentEmoji, setCurrentEmoji, setModalVisible);
         setTimeout(() => {
-          resetGame();
+          resetGame(true);
         }, 3000);
       } else {
+        setPlayerStats();
         guessType[index] = 3;
         setCurrentGuess(currentGuess + 1);
         setCurrentEmoji(currentEmoji + 1);
@@ -60,7 +82,7 @@ export default function GeneralScreen({ navigation }) {
   };
 
   useEffect(() => {
-    loadCurrentMovie();
+    setEmojiOrder(randomizeEmojis(loadCurrentMovie()));
   }, [loadCurrentMovie]);
 
   return (
@@ -90,7 +112,7 @@ export default function GeneralScreen({ navigation }) {
           currentMovie={currentMovie}
           mode="geral"
           genre="general"
-          streak={1}
+          streak={generalStreak}
         />
         <Text className=" mb-2 bg-slate-50 border-2 border-slate-600 px-4 py-1 text-xl rounded-xl font-black">
           GERAL
@@ -107,7 +129,7 @@ export default function GeneralScreen({ navigation }) {
             )}
 
             <View className="w-full h-20 flex-row justify-evenly items-center rounded-xl bg-slate-50 border-2 border-slate-600 overflow-hidden">
-              {currentMovie.emojis.map((emoji, index) => (
+              {currentMovie.emojis.map((_, index) => (
                 <Text
                   key={index}
                   className="text-4xl"
@@ -119,7 +141,9 @@ export default function GeneralScreen({ navigation }) {
                     ],
                   }}
                 >
-                  {index > currentEmoji ? "🤫" : emoji}
+                  {index > currentEmoji
+                    ? "🤫"
+                    : currentMovie.emojis[emojiOrder[index]]}
                 </Text>
               ))}
             </View>

@@ -55,6 +55,7 @@ export default function HomeNavigator({ route }) {
           ),
           headerShown: false,
         }}
+        initialParams={{ id_user: id_user }}
       />
       <Botton.Screen
         name="profileStack"

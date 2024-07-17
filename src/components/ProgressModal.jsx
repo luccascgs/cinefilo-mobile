@@ -66,8 +66,9 @@ export default function ProgressModal({
   };
 
   useEffect(() => {
+    setIsloading(true);
     loadScoreboard();
-  }, [loadScoreboard]);
+  }, [loadScoreboard, modalVisible]);
 
   return (
     <Modal
@@ -100,7 +101,7 @@ export default function ProgressModal({
             Tabela semanal: {mode}
           </Text>
           {isLoading ? (
-            <View>
+            <View className="h-64 justify-center">
               <ActivityIndicator size={"large"} color={colors.black} />
             </View>
           ) : (

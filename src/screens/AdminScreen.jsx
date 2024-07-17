@@ -13,6 +13,8 @@ import { colors } from "../config/variables";
 import { Feather } from "@expo/vector-icons";
 import debounce from "lodash.debounce";
 import { api } from "../config/api";
+import { Alert } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function AdminScreen({ navigation }) {
   const [movies, setMovies] = useState([]);
@@ -26,6 +28,36 @@ export default function AdminScreen({ navigation }) {
     setFilteredMovies(response.data);
     setIsloading(false);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsloading(true);
+      loadMovies();
+    }, [])
+  );
+
+  const handleDelete = useCallback(async (id) => {
+    await api.delete(`/movies/${id}`);
+    loadMovies();
+  }, []);
+
+  const handleConfirmDelete = (movie) => {
+    Alert.alert(
+      `Deseja realmente excluir ${movie.name}?`,
+      "Essa ação excluirá permanentemente o filme do banco de dados",
+      [
+        {
+          text: "Não",
+          onPress: () => console.log("não apagar " + movie.name),
+          style: "cancel",
+        },
+        { text: "Sim", onPress: () => handleDelete(movie.id) },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  };
 
   const search = useMemo(
     () =>
@@ -45,9 +77,6 @@ export default function AdminScreen({ navigation }) {
   useEffect(() => {
     handleSearch();
   }, [handleSearch]);
-  useEffect(() => {
-    loadMovies();
-  }, [loadMovies]);
 
   return (
     <LinearGradient
@@ -94,17 +123,21 @@ export default function AdminScreen({ navigation }) {
                     {movie.name}
                   </Text>
                   <View className="flex-row">
-                    <Pressable
+                    <Feather
                       onPress={() =>
                         navigation.navigate("form", { id: movie.id })
                       }
-                      className="mr-4"
-                    >
-                      <Feather color={colors.green} name="edit" size={28} />
-                    </Pressable>
-                    <Pressable>
-                      <Feather color={colors.red} name="x" size={28} />
-                    </Pressable>
+                      style={{ marginRight: 8 }}
+                      color={colors.green}
+                      name="edit"
+                      size={28}
+                    />
+                    <Feather
+                      onPress={() => handleConfirmDelete(movie)}
+                      color={colors.red}
+                      name="x"
+                      size={28}
+                    />
                   </View>
                 </View>
               ))}

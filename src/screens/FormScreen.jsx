@@ -48,9 +48,13 @@ export default function FormScreen({ route, navigation }) {
         genre: Number(genre),
       };
 
-      console.log(payLoad);
+      if (id) {
+        await api.put(`/movies/${id}`, payLoad);
+      } else {
+        await api.post("/movies", payLoad);
+      }
 
-      navigation.navigate("admin");
+      navigation.goBack();
     } catch (err) {
       console.error(err);
     }
