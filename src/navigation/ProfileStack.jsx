@@ -3,6 +3,7 @@ import { colors } from "../config/variables";
 import AdminNavigator from "./AdminNavigator";
 import ProfileScreen from "../screens/ProfileScreen";
 import PasswordScreen from "../screens/PasswordScreen";
+import UserIconScreen from "../screens/UserIconScreen";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,16 @@ export default function ProfileNavigator({ route }) {
         tab
         options={{
           headerShown: false,
+        }}
+        initialParams={{ id_user: id_user }}
+      />
+      <Stack.Screen
+        name="userIcon"
+        component={UserIconScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
         }}
         initialParams={{ id_user: id_user }}
       />

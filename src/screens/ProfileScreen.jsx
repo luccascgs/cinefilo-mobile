@@ -1,5 +1,12 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, ImageBackground, Text, ScrollView, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  Text,
+  ScrollView,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import dayjs from "dayjs";
@@ -61,15 +68,24 @@ export default function ProfileScreen({ route, navigation }) {
           <Text>Carregando</Text>
         ) : (
           <>
-            <View className="items-end">
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() =>
+                navigation.navigate("userIcon", {
+                  background: user.background,
+                  head: user.head,
+                })
+              }
+              className="items-end"
+            >
               <View className="w-48 h-48 translate-y-12 rounded-full border-4 border-slate-50">
-                {/* <Image
+                <Image
                   fadeDuration={0}
-                  className="w-full h-full border-2 rounded-full"
+                  className="w-full h-full absolute border-2 rounded-full"
                   source={{
                     uri: `https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/background%2F${user.background}.png?alt=media&token=2fd80ded-6aad-49f6-95dc-78b905eba1f6`,
                   }}
-                /> */}
+                />
                 <Image
                   fadeDuration={0}
                   className="w-full h-full absolute border-2 rounded-full"
@@ -77,19 +93,19 @@ export default function ProfileScreen({ route, navigation }) {
                 />
                 <Image
                   fadeDuration={0}
-                  className="w-full z-10 h-full border-2 rounded-full"
+                  className="w-full h-full absolute border-2 rounded-full"
                   source={{
                     uri: `https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/head%2F${user.head}.png?alt=media&token=6125114d-847d-4029-b46d-ff0a5830921e`,
                   }}
                 />
               </View>
-              <Pressable
+              <View
                 style={{ borderColor: colors.blueBg }}
                 className="p-2 border-4 rounded-full bg-slate-50"
               >
                 <Feather name="edit" size={28} />
-              </Pressable>
-            </View>
+              </View>
+            </TouchableOpacity>
             <View className="w-full items-center bg-slate-50 mt-2 border-2 border-slate-600 rounded-xl p-6">
               <View className="flex-row items-center">
                 <Text className="text-slate-600 text-2xl font-semibold pr-2">
