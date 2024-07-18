@@ -13,7 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function ProfileScreen({ route, navigation }) {
   const { id_user } = route.params ?? {};
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [stats, setStats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -62,15 +62,24 @@ export default function ProfileScreen({ route, navigation }) {
         ) : (
           <>
             <View className="items-end">
-              <View className="w-48 h-48 translate-y-12">
+              <View className="w-48 h-48 translate-y-12 rounded-full border-4 border-slate-50">
+                {/* <Image
+                  fadeDuration={0}
+                  className="w-full h-full border-2 rounded-full"
+                  source={{
+                    uri: `https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/background%2F${user.background}.png?alt=media&token=2fd80ded-6aad-49f6-95dc-78b905eba1f6`,
+                  }}
+                /> */}
                 <Image
+                  fadeDuration={0}
                   className="w-full h-full absolute border-2 rounded-full"
                   source={require("../../assets/base.png")}
                 />
                 <Image
-                  className="w-full h-full border-2 rounded-full"
+                  fadeDuration={0}
+                  className="w-full z-10 h-full border-2 rounded-full"
                   source={{
-                    uri: "https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/head%2Fbatman.png?alt=media&token=97fdf637-1f7e-4c86-89f1-d87d02e222e9",
+                    uri: `https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/head%2F${user.head}.png?alt=media&token=6125114d-847d-4029-b46d-ff0a5830921e`,
                   }}
                 />
               </View>
