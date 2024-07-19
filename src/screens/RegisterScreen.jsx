@@ -29,15 +29,20 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleSubmit = useCallback(async () => {
-    if (password.trim() !== repeatPassword.trim()) {
-      return setError("Senhas diferentes, verifique ortografia");
-    }
-    if (!validateEmail(email)) return setError("Digite um email válido");
     try {
-      const registerCredentials = { email, username, password };
-      const response = await api.post("/users", registerCredentials);
-      const uid = response.data.id;
-      navigation.navigate("homeStack", { id_user: uid });
+      if (password.trim().equals(repeatPassword.trim())) {
+        setError("Senhas diferentes, verifique ortografia");
+      } else {
+        if (!validateEmail(email)) return setError("Digite um email válido");
+        const registerCredentials = {
+          email,
+          username,
+          password,
+        };
+        const response = await api.post("/users", registerCredentials);
+        const uid = response.data.id;
+        navigation.navigate("homeStack", { id_user: uid });
+      }
     } catch (err) {
       setError(err.response.data.message);
     }

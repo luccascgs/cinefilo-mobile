@@ -1,12 +1,12 @@
 import GeneralScreen from "../screens/GeneralScreen";
-import { createStackNavigator } from "@react-navigation/stack";
 import GenresScreen from "../screens/GenresScreen";
+import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "../config/variables";
 
 const Stack = createStackNavigator();
 
 export default function GenresNavigator({ route }) {
-  const { id_user, generalStreak } = route.params;
+  const { id_user } = route.params;
   return (
     <Stack.Navigator>
       <Stack.Screen

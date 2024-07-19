@@ -14,6 +14,7 @@ import { X } from "react-native-feather";
 import { Feather } from "@expo/vector-icons";
 import { colors } from "../config/variables";
 import { api } from "../config/api";
+import { Skeleton } from "moti/skeleton";
 
 export default function ProgressModal({
   modalVisible,
@@ -29,7 +30,8 @@ export default function ProgressModal({
 
   const loadPlayer = useCallback(async (id_user) => {
     const response = await api.get(`/users/${id_user}`);
-    return response.data?.username;
+    const user = response.data;
+    return user;
   }, []);
 
   const loadScoreboard = useCallback(async () => {
@@ -37,11 +39,16 @@ export default function ProgressModal({
       const response = await api.get(`/stats/scoreboard/${genre}`);
       if (response.data) {
         const statsWithUser = await Promise.all(
-          response.data.map(async (stats, index) => ({
-            id: index,
-            score: stats[genre],
-            username: await loadPlayer(stats.id_user),
-          }))
+          response.data.map(async (stats, index) => {
+            const user = await loadPlayer(stats.id_user);
+            return {
+              id: index,
+              score: stats[genre],
+              username: user.username,
+              head: user.head,
+              background: user.background,
+            };
+          })
         );
         setPlayersStats(statsWithUser);
       }
@@ -101,8 +108,17 @@ export default function ProgressModal({
             Tabela semanal: {mode}
           </Text>
           {isLoading ? (
-            <View className="h-64 justify-center">
-              <ActivityIndicator size={"large"} color={colors.black} />
+            <View className="h-64 overflow-hidden">
+              {[...Array(5)].map((_, index) => (
+                <View className="mb-1 border-2 rounded-lg border-slate-400">
+                  <Skeleton
+                    colorMode="light"
+                    show={true}
+                    height={60}
+                    width={"100%"}
+                  />
+                </View>
+              ))}
             </View>
           ) : (
             <View className="w-full h-64 items-center">
@@ -122,8 +138,23 @@ export default function ProgressModal({
                         className="h-12 w-12 rounded-full border-2 border-slate-600"
                       >
                         <Image
-                          className="w-full h-full rounded-full"
-                          source={require("../../assets/gilgoiaba.jpg")}
+                          fadeDuration={0}
+                          className="w-full h-full absolute border-2 rounded-full"
+                          source={{
+                            uri: player.background,
+                          }}
+                        />
+                        <Image
+                          fadeDuration={0}
+                          className="w-full h-full absolute border-2 rounded-full"
+                          source={require("../../assets/base.png")}
+                        />
+                        <Image
+                          fadeDuration={0}
+                          className="w-full h-full absolute border-2 rounded-full"
+                          source={{
+                            uri: player.head,
+                          }}
                         />
                       </View>
                       <Text

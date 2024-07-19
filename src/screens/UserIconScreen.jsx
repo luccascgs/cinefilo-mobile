@@ -6,6 +6,7 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
@@ -13,32 +14,43 @@ import { Feather } from "@expo/vector-icons";
 import { colors } from "../config/variables";
 import { Pressable } from "react-native";
 import { api } from "../config/api";
-
-import { Image as ImageExpo } from "expo-image";
+import { Skeleton } from "moti/skeleton";
 
 export default function UserIconScreen({ route, navigation }) {
-  const { id_user, background, head } = route.params;
+  const { id_user } = route.params;
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundsList, setBackgroundsList] = useState([]);
   const [headsList, setHeadsList] = useState([]);
-  const [selectedBackground, setSelectedBackground] = useState(background);
-  const [selectedHead, setSelectedHead] = useState(head);
+  const [selectedBackground, setSelectedBackground] = useState("");
+  const [selectedHead, setSelectedHead] = useState("");
 
   const loadImages = useCallback(async () => {
+    const userResponse = await api.get(`/users/${id_user}`);
     const backgroundResponse = await api.get("/icons/background");
     const headResponse = await api.get("/icons/head");
     setBackgroundsList(backgroundResponse.data);
     setHeadsList(headResponse.data);
+    setSelectedBackground(userResponse.data?.background);
+    setSelectedHead(userResponse.data?.head);
     setIsLoading(false);
   }, []);
 
-  const handleSelectBackground = (bg) => {
-    setSelectedBackground(bg);
-  };
+  const handleSubmit = useCallback(async (background, head) => {
+    try {
+      const payload = {
+        background,
+        head,
+      };
+      await api.put(`users/icon/${id_user}`, payload);
+      navigation.goBack();
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   useEffect(() => {
     loadImages();
-  }, []);
+  }, [loadImages]);
 
   return (
     <LinearGradient
@@ -57,7 +69,16 @@ export default function UserIconScreen({ route, navigation }) {
         <Text className="text-2xl text-slate-50 font-black absolute top-16 self-center">
           CINÉFILO
         </Text>
-        <View className="items-end">
+
+        {isLoading ? (
+          <Skeleton
+            colorMode="light"
+            show={true}
+            radius="round"
+            height={192}
+            width={192}
+          />
+        ) : (
           <View className="w-48 h-48 rounded-full border-4 border-slate-50">
             <Image
               fadeDuration={0}
@@ -75,26 +96,37 @@ export default function UserIconScreen({ route, navigation }) {
               fadeDuration={0}
               className="w-full h-full absolute border-2 rounded-full"
               source={{
-                uri: `https://firebasestorage.googleapis.com/v0/b/cinefilo-b25a5.appspot.com/o/head%2F${selectedHead}.png?alt=media&token=6125114d-847d-4029-b46d-ff0a5830921e`,
+                uri: selectedHead,
               }}
             />
           </View>
-        </View>
+        )}
         <View className="w-full items-center bg-slate-50 mt-2 border-2 border-slate-600 rounded-xl p-6">
           <Text className="text-slate-600 self-start font-bold text-lg">
             Plano de fundo
           </Text>
           {isLoading ? (
-            <Text>Loading...</Text>
+            <View className="h-28 my-2 flex-row w-full overflow-hidden">
+              {[...Array(3)].map((item, index) => (
+                <View key={index} className="mr-4">
+                  <Skeleton
+                    colorMode="light"
+                    show={true}
+                    height={112}
+                    width={112}
+                  />
+                </View>
+              ))}
+            </View>
           ) : (
-            <View className="h-24 my-2 w-full">
-              <ScrollView className="flex-row gap-2" horizontal={true}>
+            <View className="h-28 my-2 w-full">
+              <ScrollView className="flex-row" horizontal={true}>
                 {backgroundsList?.map((item, index) => (
-                  <Pressable
+                  <TouchableOpacity
                     key={index}
-                    onPress={() => handleSelectBackground(item.uri)}
+                    onPress={() => setSelectedBackground(item.uri)}
                     activeOpacity={0.6}
-                    className="w-24 h-24 border-4 rounded-xl"
+                    className="w-28 h-28 mr-4 border-4 rounded-xl"
                     style={{
                       borderColor:
                         selectedBackground === item.uri
@@ -102,11 +134,11 @@ export default function UserIconScreen({ route, navigation }) {
                           : colors.white,
                     }}
                   >
-                    <ImageExpo
+                    <Image
                       className="w-full h-full rounded-lg"
-                      source={item.uri}
+                      source={{ uri: item.uri }}
                     />
-                  </Pressable>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -115,23 +147,70 @@ export default function UserIconScreen({ route, navigation }) {
           <Text className="text-slate-600 self-start font-bold text-lg">
             Acessório da cabeça
           </Text>
+          {isLoading ? (
+            <View className="h-28 my-2 flex-row w-full overflow-hidden">
+              {[...Array(3)].map((item, index) => (
+                <View key={index} className="mr-4">
+                  <Skeleton
+                    colorMode="light"
+                    show={true}
+                    height={112}
+                    width={112}
+                  />
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View className="h-28 my-2 w-full">
+              <ScrollView className="flex-row" horizontal={true}>
+                <TouchableOpacity
+                  onPress={() => setSelectedHead("default")}
+                  activeOpacity={0.6}
+                  className="w-28 h-28 mr-4 border-4 rounded-xl"
+                  style={{
+                    borderColor:
+                      selectedHead === "default" ? colors.green : colors.gray,
+                  }}
+                ></TouchableOpacity>
+                {headsList?.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setSelectedHead(item.uri)}
+                    activeOpacity={0.6}
+                    className="w-28 h-28 mr-4 border-4 rounded-xl"
+                    style={{
+                      borderColor:
+                        selectedHead === item.uri ? colors.green : colors.gray,
+                    }}
+                  >
+                    <Image
+                      className="w-full h-full rounded-lg"
+                      source={{ uri: item.uri }}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
           <View className="w-full flex-row justify-between">
-            <Pressable
+            <TouchableOpacity
+              activeOpacity={0.6}
               style={{ width: "49%" }}
               onPress={() => navigation.goBack()}
               className="flex-row items-center justify-center bg-red-50 mt-2 border-2 border-red-600 rounded-xl h-10"
             >
               <Feather name="arrow-left" color={colors.red} />
               <Text className="self-center text-red-600 pl-2">Descartar</Text>
-            </Pressable>
-            <Pressable
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.6}
               style={{ width: "49%" }}
-              onPress={() => navigation.goBack()}
+              onPress={() => handleSubmit(selectedBackground, selectedHead)}
               className="flex-row items-center justify-center bg-emerald-50 mt-2 border-2 border-emerald-600 rounded-xl h-10"
             >
               <Feather name="check" color={colors.green} />
               <Text className="self-center text-emerald-600 pl-2">Salvar</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
