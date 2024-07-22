@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
@@ -47,6 +48,23 @@ export default function UserIconScreen({ route, navigation }) {
       console.log(err);
     }
   }, []);
+
+  const handleConfirmGoBack = () => {
+    Alert.alert(
+      "Deseja realmente sair sem salvar?",
+      "Essa ação descartará todas as alterações feitas.",
+      [
+        {
+          text: "Não",
+          style: "cancel",
+        },
+        { text: "Sim", onPress: () => navigation.goBack() },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  };
 
   useEffect(() => {
     loadImages();
@@ -196,7 +214,7 @@ export default function UserIconScreen({ route, navigation }) {
             <TouchableOpacity
               activeOpacity={0.6}
               style={{ width: "49%" }}
-              onPress={() => navigation.goBack()}
+              onPress={() => handleConfirmGoBack()}
               className="flex-row items-center justify-center bg-red-50 mt-2 border-2 border-red-600 rounded-xl h-10"
             >
               <Feather name="arrow-left" color={colors.red} />

@@ -110,7 +110,10 @@ export default function ProgressModal({
           {isLoading ? (
             <View className="h-64 overflow-hidden">
               {[...Array(5)].map((_, index) => (
-                <View className="mb-1 border-2 rounded-lg border-slate-400">
+                <View
+                  key={index}
+                  className="mb-1 border-2 rounded-lg border-slate-400"
+                >
                   <Skeleton
                     colorMode="light"
                     show={true}

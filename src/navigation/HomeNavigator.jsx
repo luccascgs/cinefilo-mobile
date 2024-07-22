@@ -2,9 +2,9 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { colors } from "../config/variables";
-import HomeScreen from "../screens/HomeScreen";
 import GenresNavigator from "./GenresNavigator";
 import ProfileNavigator from "./ProfileStack";
+import DailyScreen from "../screens/DailyScreen";
 
 const Botton = createBottomTabNavigator();
 
@@ -29,7 +29,7 @@ export default function HomeNavigator({ route }) {
     >
       <Botton.Screen
         name="daily"
-        component={HomeScreen}
+        component={DailyScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Feather

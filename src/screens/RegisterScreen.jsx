@@ -29,10 +29,10 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleSubmit = useCallback(async () => {
-    try {
-      if (password.trim().equals(repeatPassword.trim())) {
-        setError("Senhas diferentes, verifique ortografia");
-      } else {
+    if (password.trim() !== repeatPassword.trim()) {
+      setError("Senhas diferentes, verifique ortografia");
+    } else {
+      try {
         if (!validateEmail(email)) return setError("Digite um email válido");
         const registerCredentials = {
           email,
@@ -42,9 +42,9 @@ export default function RegisterScreen({ navigation }) {
         const response = await api.post("/users", registerCredentials);
         const uid = response.data.id;
         navigation.navigate("homeStack", { id_user: uid });
+      } catch (err) {
+        setError(err.response.data.message);
       }
-    } catch (err) {
-      setError(err.response.data.message);
     }
   }, [username, password, error, setError]);
 
@@ -118,7 +118,7 @@ export default function RegisterScreen({ navigation }) {
             </View>
             {error && <Text className="text-red-600">{error}</Text>}
             <TouchableOpacity
-              onPress={handleSubmit}
+              onPress={() => handleSubmit}
               className="w-full justify-center bg-sky-600 mb-2 mt-2 border-sky-50 rounded-xl h-10"
             >
               <Text className="self-center text-sky-50">Fazer Registro</Text>

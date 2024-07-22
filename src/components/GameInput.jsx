@@ -4,13 +4,7 @@ import { Check, Edit2, MessageCircle, X } from "react-native-feather";
 import { Feather } from "@expo/vector-icons";
 import { colors } from "../config/variables";
 
-export default function GameInput({
-  index,
-  type,
-  currentGuess,
-  onSubmit,
-  movieName,
-}) {
+export default function GameInput({ index, type, guess, onSubmit, movieName }) {
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
 
@@ -28,6 +22,10 @@ export default function GameInput({
   };
 
   const typeColor = handleTypeColors();
+
+  useEffect(() => {
+    if (guess) setValue(guess);
+  }, []);
 
   return (
     <View

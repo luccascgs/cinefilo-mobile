@@ -24,9 +24,7 @@ export default function ProfileNavigator({ route }) {
         name="userIcon"
         component={UserIconScreen}
         options={{
-          title: false,
-          headerTransparent: true,
-          headerTintColor: colors.white,
+          headerShown: false,
         }}
         initialParams={{ id_user: id_user }}
       />

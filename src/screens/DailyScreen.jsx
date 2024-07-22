@@ -15,10 +15,11 @@ import { colors } from "../config/variables";
 import GameSkeleton from "../components/GameSkeleton";
 import ProgressModal from "../components/ProgressModal";
 
-export default function HomeScreen({ route }) {
+export default function DailyScreen({ route }) {
   const { id_user } = route.params;
 
   const [currentMovie, setCurrentMovie] = useState({});
+  const [guess, setGuess] = useState([]);
   const [currentGuess, setCurrentGuess] = useState(0);
   const [currentEmoji, setCurrentEmoji] = useState(0);
   const [guessType, setGuessType] = useState(Array(5).fill(2));
@@ -40,16 +41,19 @@ export default function HomeScreen({ route }) {
 
   const loadCurrentMovie = useCallback(async () => {
     const response = await api.get("/movies/daily");
+    const user = await api.get(`/users/${id_user}`);
+    loadTries(user.data.tries, response.data);
+
+    setGuess(user.data.tries);
+    setCurrentEmoji(user.data.tries.length);
+    setCurrentGuess(user.data.tries.length);
     setCurrentMovie(response.data);
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    loadCurrentMovie();
-  }, [loadCurrentMovie]);
-
   const handleSubmit = (value, index) => {
     if (value) {
+      api.put(`/users/tries/${id_user}`, { trie: value });
       if (checkMovie(value, currentMovie)) {
         guessType[index] = 4;
         setScore(5 - currentGuess);
@@ -73,6 +77,34 @@ export default function HomeScreen({ route }) {
       }
     }
   };
+
+  const loadTries = (tries, movie) => {
+    for (index in tries) {
+      if (checkMovie(tries[index], movie)) {
+        guessType[index] = 4;
+        setScore(5 - currentGuess);
+        setCurrentGuess(5);
+        setCurrentEmoji(5);
+        setTimeout(() => {
+          setModalVisible(true);
+          setOver(true);
+        }, 1500);
+      } else {
+        guessType[index] = 3;
+        console.log(index);
+        if (index == 4) {
+          setTimeout(() => {
+            setModalVisible(true);
+            setOver(true);
+          }, 1500);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadCurrentMovie();
+  }, [loadCurrentMovie]);
 
   return (
     <LinearGradient
@@ -138,8 +170,8 @@ export default function HomeScreen({ route }) {
                 movieName={currentMovie.name}
                 key={index}
                 index={index}
+                guess={guess[index]}
                 type={index === currentGuess ? 1 : guessType[index]}
-                currentGuess={currentGuess}
                 onSubmit={(value) => handleSubmit(value, index)}
               />
             ))}

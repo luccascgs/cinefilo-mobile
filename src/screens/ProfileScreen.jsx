@@ -36,7 +36,6 @@ export default function ProfileScreen({ route, navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      setIsLoading(true);
       loadProfile();
     }, [])
   );

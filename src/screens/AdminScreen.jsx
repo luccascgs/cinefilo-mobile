@@ -48,7 +48,6 @@ export default function AdminScreen({ navigation }) {
       [
         {
           text: "Não",
-          onPress: () => console.log("não apagar " + movie.name),
           style: "cancel",
         },
         { text: "Sim", onPress: () => handleDelete(movie.id) },
