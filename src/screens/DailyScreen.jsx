@@ -42,11 +42,10 @@ export default function DailyScreen({ route }) {
   const loadCurrentMovie = useCallback(async () => {
     const response = await api.get("/movies/daily");
     const user = await api.get(`/users/${id_user}`);
-    loadTries(user.data.tries, response.data);
-
     setGuess(user.data.tries);
     setCurrentEmoji(user.data.tries.length);
     setCurrentGuess(user.data.tries.length);
+    loadTries(user.data.tries, response.data);
     setCurrentMovie(response.data);
     setIsLoading(false);
   }, []);
@@ -85,18 +84,11 @@ export default function DailyScreen({ route }) {
         setScore(5 - currentGuess);
         setCurrentGuess(5);
         setCurrentEmoji(5);
-        setTimeout(() => {
-          setModalVisible(true);
-          setOver(true);
-        }, 1500);
+        setOver(true);
       } else {
         guessType[index] = 3;
-        console.log(index);
         if (index == 4) {
-          setTimeout(() => {
-            setModalVisible(true);
-            setOver(true);
-          }, 1500);
+          setOver(true);
         }
       }
     }

@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  Image,
   ImageBackground,
   Text,
   TouchableOpacity,
@@ -7,9 +8,20 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../config/variables";
-import PagerView from "react-native-pager-view";
 import { cards } from "../config/genres";
 import Carousel from "react-native-snap-carousel";
+
+const imageMapping = {
+  general: require("../../assets/genres/general.png"),
+  horror: require("../../assets/genres/horror.png"),
+  action: require("../../assets/genres/action.png"),
+  comedy: require("../../assets/genres/comedy.png"),
+  scifi: require("../../assets/genres/scifi.png"),
+  cartoon: require("../../assets/genres/cartoon.png"),
+  drama: require("../../assets/genres/drama.png"),
+  adam: require("../../assets/genres/adam.png"),
+  series: require("../../assets/genres/series.png"),
+};
 
 export default function GenresScreen({ navigation }) {
   const { width: screenWidth } = Dimensions.get("window");
@@ -20,13 +32,14 @@ export default function GenresScreen({ navigation }) {
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => navigation.navigate("general")}
-      className="mt-48 h-3/6 rounded-3xl"
+      style={{ backgroundColor: item.color2 }}
+      className="mt-48 h-3/6 w-full rounded-3xl items-center justify-center"
     >
+      <Image className="w-64 h-64 absolute" source={imageMapping[item.img]} />
       <LinearGradient
-        className="h-full rounded-3xl items-center justify-end"
-        colors={[item.color2, item.color1]}
+        className="h-full w-full rounded-3xl items-center justify-end"
+        colors={["#ffffff00", item.color1]}
       >
-        {/* <Image source={require(`../../assets/genres/${item.img}.png`)} /> */}
         <Text className="mb-10 font-black text-slate-50 text-4xl">
           {item.title}
         </Text>

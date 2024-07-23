@@ -16,7 +16,6 @@ export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,22 +28,18 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleSubmit = useCallback(async () => {
-    if (password.trim() !== repeatPassword.trim()) {
-      setError("Senhas diferentes, verifique ortografia");
-    } else {
-      try {
-        if (!validateEmail(email)) return setError("Digite um email válido");
-        const registerCredentials = {
-          email,
-          username,
-          password,
-        };
-        const response = await api.post("/users", registerCredentials);
-        const uid = response.data.id;
-        navigation.navigate("homeStack", { id_user: uid });
-      } catch (err) {
-        setError(err.response.data.message);
-      }
+    try {
+      if (!validateEmail(email)) return setError("Digite um email válido");
+      const registerCredentials = {
+        email,
+        username,
+        password,
+      };
+      const response = await api.post("/users", registerCredentials);
+      const uid = response.data.id;
+      navigation.navigate("homeStack", { id_user: uid });
+    } catch (err) {
+      setError(err.response.data.message);
     }
   }, [username, password, error, setError]);
 
@@ -100,25 +95,9 @@ export default function RegisterScreen({ navigation }) {
                 name={visible ? "eye" : "eye-off"}
               />
             </View>
-            <Text className="text-xs mb-1 text-slate-600">Repetir senha</Text>
-            <View className="flex-row items-center w-full justify-between bg-slate-50 mb-2 border-2 border-slate-600 rounded-xl px-4 py-1">
-              <TextInput
-                className="w-11/12"
-                value={repeatPassword}
-                onChangeText={setRepeatPassword}
-                placeholder="Repita sua senha"
-                secureTextEntry={!visible}
-              />
-              <Feather
-                color={colors.black}
-                size={24}
-                onPress={() => setVisible(!visible)}
-                name={visible ? "eye" : "eye-off"}
-              />
-            </View>
             {error && <Text className="text-red-600">{error}</Text>}
             <TouchableOpacity
-              onPress={() => handleSubmit}
+              onPress={() => handleSubmit()}
               className="w-full justify-center bg-sky-600 mb-2 mt-2 border-sky-50 rounded-xl h-10"
             >
               <Text className="self-center text-sky-50">Fazer Registro</Text>
