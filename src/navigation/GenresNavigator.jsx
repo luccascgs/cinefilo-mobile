@@ -27,6 +27,86 @@ export default function GenresNavigator({ route }) {
         }}
         initialParams={{ id_user: id_user, generalStreak: 0 }}
       />
+      <Stack.Screen
+        name="horror"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="action"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="comedy"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="scifi"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="cartoon"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="drama"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="adam"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
+      <Stack.Screen
+        name="series"
+        component={GeneralScreen}
+        options={{
+          title: false,
+          headerTransparent: true,
+          headerTintColor: colors.white,
+        }}
+        initialParams={{ id_user: id_user, generalStreak: 0 }}
+      />
     </Stack.Navigator>
   );
 }
